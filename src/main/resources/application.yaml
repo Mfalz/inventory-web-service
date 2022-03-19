@@ -1,0 +1,40 @@
+server:
+  port: 8080
+  shutdown: graceful
+  error:
+    include-message: always
+  servlet:
+    encoding:
+      enabled: true
+      force: true
+      charset: "UTF-8"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+      probes:
+        enabled: true
+    info.enabled: true
+
+spring:
+  application.name: inventory-service
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/inventory
+    username: ${DB_USER:testuser}
+    password: ${DB_PASSWORD:testuser}
+  jpa:
+    hibernate:
+      ddl-auto: create
+      use-new-id-generator-mappings: true
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+    open-in-view: false
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
