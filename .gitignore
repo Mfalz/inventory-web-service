@@ -5,6 +5,9 @@ target/
 !**/src/test/**/target/
 **/src/test/**/input_excel/~*.xlsx
 
+pom.xml.releaseBackup
+release.properties
+
 ### STS ###
 .apt_generated
 .classpath
