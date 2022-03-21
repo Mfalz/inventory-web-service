@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-public class InventoryControllerIntegrationTest extends ControllerIT {
+public class InventoryControllerIT extends ControllerIT {
 
 	@Autowired
 	private InventoryRepository inventoryRepository;
@@ -52,7 +52,7 @@ public class InventoryControllerIntegrationTest extends ControllerIT {
 		var resource = loadFileInClasspath(filename);
 
 		return webTestClient.post()
-							.uri("/inventory")
+							.uri("api/v1/inventory")
 							.contentType(MediaType.MULTIPART_FORM_DATA)
 							.body(BodyInserters.fromMultipartData("file", resource))
 							.exchange();
