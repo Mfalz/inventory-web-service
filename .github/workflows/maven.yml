@@ -3,7 +3,9 @@ name: Build Test and Deploy
 on:
   push:
   pull_request:
-    branches: [ main ]
+    branches:
+      - 'main'
+      - 'dev'
 
 jobs:
   build-and-test:
@@ -16,12 +18,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+      - name: Set execution bit for mvnw
+        run: chmod +x ./mvnw
       - name: Build
-        run: mvn -B package -DskipTests --file pom.xml
+        run: ./mvnw -B package -DskipTests --file pom.xml
       - name: Run Unit Tests
-        run: mvn test
+        run: ./mvnw test
       - name: Run Integration Tests
-        run: mvn verify
+        run: ./mvnw verify
 
   release-snapshot:
     runs-on: ubuntu-latest
@@ -36,7 +40,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Publish package
-        run: mvn --batch-mode deploy -DskipTests
+        run: |
+          chmod +x ./mvnw
+          ./mvnw --batch-mode deploy -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -57,6 +63,8 @@ jobs:
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
       - name: Release package
-        run: mvn --batch-mode release:prepare release:perform -DskipTests
+        run: |
+          chmod +x ./mvnw
+          ./mvnw --batch-mode release:prepare release:perform -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
