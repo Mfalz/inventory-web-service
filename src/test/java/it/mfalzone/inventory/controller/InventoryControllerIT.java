@@ -1,8 +1,10 @@
 package it.mfalzone.inventory.controller;
 
 import it.mfalzone.inventory.controller.errorhandling.model.ApiError;
-import it.mfalzone.inventory.service.exception.BusinessErrorCode;
+import it.mfalzone.inventory.controller.model.InventoryRest;
+import it.mfalzone.inventory.domain.model.DomainUtils;
 import it.mfalzone.inventory.persistence.InventoryRepository;
+import it.mfalzone.inventory.service.exception.BusinessErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 public class InventoryControllerIT extends ControllerIT {
+
+	private final static String INVENTORY_ENDPOINT = "api/v1/inventory";
 
 	@Autowired
 	private InventoryRepository inventoryRepository;
@@ -48,13 +52,39 @@ public class InventoryControllerIT extends ControllerIT {
 		assertThat(error.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
 	}
 
+	@Test
+	void downloadInventory_inventoryIsReturned() {
+		inventoryRepository.save(DomainUtils.buildProductEntity());
+		var response = downloadInventoryRequest().expectStatus()
+												 .isOk()
+												 .expectBody(InventoryRest.class)
+												 .returnResult()
+												 .getResponseBody();
+
+		assertThat(response).isNotNull();
+		assertThat(response.getProducts()).hasSize(1);
+		assertThat(response.getProducts().get(0).getDescription()).isEqualTo("description");
+	}
+
+	@Test
+	void downloadInventory_noInventory_notFoundIsReturned() {
+		downloadInventoryRequest().expectStatus().isNotFound();
+	}
+
 	private WebTestClient.ResponseSpec uploadFileRequest(String filename) {
 		var resource = loadFileInClasspath(filename);
 
 		return webTestClient.post()
-							.uri("api/v1/inventory")
+							.uri(INVENTORY_ENDPOINT)
 							.contentType(MediaType.MULTIPART_FORM_DATA)
 							.body(BodyInserters.fromMultipartData("file", resource))
+							.exchange();
+	}
+
+	private WebTestClient.ResponseSpec downloadInventoryRequest() {
+
+		return webTestClient.get()
+							.uri(INVENTORY_ENDPOINT)
 							.exchange();
 	}
 

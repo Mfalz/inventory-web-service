@@ -14,20 +14,29 @@ public interface ProductMapper {
 		pe.setDescription(p.getDescription());
 		pe.setExpiryDate(Timestamp.valueOf(p.getExpiry()));
 		pe.setQuantity(p.getQuantity());
-		pe.setWeight(mapWeight(p.getWeight()));
+		pe.setWeight(mapToEntityWeight(p.getWeight()));
 
 		return pe;
 	}
 
-	static ProductEntity.Weight mapWeight(Weight w) {
-		ProductEntity.Weight weight = new ProductEntity.Weight();
-		weight.setAmount(w.getAmount());
-		weight.setMeasurement(mapWeightMeasurement(w.getMeasurement()));
-
-		return weight;
+	static ProductEntity.Weight mapToEntityWeight(Weight w) {
+		return new ProductEntity.Weight(w.getAmount(), mapToEntityWeightMeasurement(w.getMeasurement()));
 	}
 
-	static ProductEntity.Weight.WeightMeasurement mapWeightMeasurement(WeightMeasurement w) {
+	static Product mapToProduct(ProductEntity entity) {
+		return Product.builder()
+					  .description(entity.getDescription())
+					  .quantity(entity.getQuantity())
+					  .weight(mapToWeight(entity.getWeight()))
+					  .expiry(entity.getExpiryDate().toLocalDateTime())
+					  .build();
+	}
+
+	static Weight mapToWeight(ProductEntity.Weight weight) {
+		return new Weight(weight.getAmount(), mapToWeightMeasurement(weight.getMeasurement()));
+	}
+
+	static ProductEntity.Weight.WeightMeasurement mapToEntityWeightMeasurement(WeightMeasurement w) {
 		if (w.name().equals(ProductEntity.Weight.WeightMeasurement.GRAMS.name())) {
 			return ProductEntity.Weight.WeightMeasurement.GRAMS;
 		}
@@ -36,4 +45,13 @@ public interface ProductMapper {
 		}
 		return null;
 	}
+
+	static WeightMeasurement mapToWeightMeasurement(ProductEntity.Weight.WeightMeasurement w) {
+		return switch (w.name()) {
+			case "LITERS" -> WeightMeasurement.LITERS;
+			case "GRAMS" -> WeightMeasurement.GRAMS;
+			default -> null;
+		};
+	}
+
 }

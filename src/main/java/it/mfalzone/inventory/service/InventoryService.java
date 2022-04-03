@@ -1,8 +1,11 @@
 package it.mfalzone.inventory.service;
 
-import it.mfalzone.inventory.service.inputreader.InventoryExcelReaderImpl;
+import it.mfalzone.inventory.domain.model.Product;
 import it.mfalzone.inventory.persistence.InventoryRepository;
 import it.mfalzone.inventory.persistence.entity.ProductEntity;
+import it.mfalzone.inventory.service.exception.BusinessErrorCode;
+import it.mfalzone.inventory.service.exception.NotFoundBusinessException;
+import it.mfalzone.inventory.service.inputreader.InventoryExcelReaderImpl;
 import it.mfalzone.inventory.service.mapper.ProductMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,5 +40,13 @@ public class InventoryService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public List<Product> getAllProducts() {
+		List<ProductEntity> productEntities = inventoryRepository.findAll();
+		if (productEntities.isEmpty()) {
+			throw new NotFoundBusinessException(BusinessErrorCode.INVENTORY_EMPTY, "Inventory is empty");
+		}
+		return productEntities.stream().map(ProductMapper::mapToProduct).toList();
 	}
 }

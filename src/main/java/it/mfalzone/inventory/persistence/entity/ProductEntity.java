@@ -1,6 +1,8 @@
 package it.mfalzone.inventory.persistence.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Value;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -23,12 +25,19 @@ public class ProductEntity {
 	private Timestamp expiryDate;
 
 	@Embeddable
-	@Data
+	@Getter
 	public static class Weight {
 		private Integer amount;
 		private WeightMeasurement measurement;
 
-		public static enum WeightMeasurement {
+		public Weight(){}
+
+		public Weight(int amount, WeightMeasurement measurement) {
+			this.amount = amount;
+			this.measurement = measurement;
+		}
+
+		public enum WeightMeasurement {
 			LITERS, GRAMS
 		}
 	}

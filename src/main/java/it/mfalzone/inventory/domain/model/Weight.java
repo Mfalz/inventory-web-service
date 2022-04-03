@@ -10,7 +10,7 @@ public class Weight {
 	private Integer amount;
 	private WeightMeasurement measurement;
 
-	private Weight(Integer amount, WeightMeasurement measurement) {
+	public Weight(Integer amount, WeightMeasurement measurement) {
 		this.amount = amount;
 		this.measurement = measurement;
 	}

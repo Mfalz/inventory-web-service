@@ -27,7 +27,6 @@ public class BusinessException extends RuntimeException {
 	}
 
 	public void addValidationMessages(List<String> messages) {
-		// TODO: make it withValidationMessages(List<String> messages)
 		this.validationMessages.addAll(messages);
 	}
 }

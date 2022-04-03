@@ -39,7 +39,19 @@ public final class InventoryExcelReaderImpl extends InventoryReader {
 				parseHeader(row);
 			} else {
 				try {
-					importedProducts.add(parseLine(row));
+					Cell description = row.getCell(columnMapping.get(ExcelHeaders.DESCRIPTION));
+					Cell quantity = row.getCell(columnMapping.get(ExcelHeaders.QUANTITY));
+					Cell weight = row.getCell(columnMapping.get(ExcelHeaders.WEIGHT));
+					Cell expiry = row.getCell(columnMapping.get(ExcelHeaders.EXPIRY));
+					Cell category = row.getCell(columnMapping.get(ExcelHeaders.CATEGORY));
+					Cell location = row.getCell(columnMapping.get(ExcelHeaders.LOCATION));
+
+					if (description != null && quantity != null && weight != null && expiry != null) {
+						importedProducts.add(parseLine(description, quantity, weight, expiry, category, location));
+					} else {
+						LOG.warn("[{}] Skip reading line, at least one of the required column is null", filename);
+					}
+
 				} catch (Exception e) {
 					addValidationError(row.getRowNum(), e.getMessage());
 				}
@@ -47,23 +59,22 @@ public final class InventoryExcelReaderImpl extends InventoryReader {
 		}
 	}
 
-	private Product parseLine(@NotNull Row line) throws InvalidInputBusinessException {
-		Cell description = line.getCell(columnMapping.get(ExcelHeaders.DESCRIPTION));
-		Cell quantity = line.getCell(columnMapping.get(ExcelHeaders.QUANTITY));
-		Cell weight = line.getCell(columnMapping.get(ExcelHeaders.WEIGHT));
-		Cell expiry = line.getCell(columnMapping.get(ExcelHeaders.EXPIRY));
-		Cell category = line.getCell(columnMapping.get(ExcelHeaders.CATEGORY));
-		Cell location = line.getCell(columnMapping.get(ExcelHeaders.LOCATION));
-
+	private Product parseLine(@NotNull Cell description,
+							  @NotNull Cell quantity,
+							  @NotNull Cell weight,
+							  @NotNull Cell expiry,
+							  Cell category,
+							  Cell location) throws InvalidInputBusinessException {
 		Product parsedProduct = Product.builder()
-						   .description(description.getStringCellValue())
-						   .quantity(Double.valueOf(quantity.getNumericCellValue()).intValue())
-						   .weight(Weight.of(weight.getStringCellValue()))
-						   .expiry(expiry.getLocalDateTimeCellValue())
-						   .category(category != null ? category.getStringCellValue() : "")
-						   .location(location != null ? location.getStringCellValue() : "")
-						   .build();
-		if (!parsedProduct.isValid()) {
+									   .description(description.getStringCellValue())
+									   .quantity(Double.valueOf(quantity.getNumericCellValue()).intValue())
+									   .weight(Weight.of(weight.getStringCellValue()))
+									   .expiry(expiry.getLocalDateTimeCellValue())
+									   .category(category != null ? category.getStringCellValue() : "")
+									   .location(location != null ? location.getStringCellValue() : "")
+									   .build();
+
+		if (!Product.isValid(parsedProduct)) {
 			throw new InvalidInputBusinessException(BusinessErrorCode.PRODUCT_IS_NOT_VALID, String.format("Parsed product isn't valid: %s ", parsedProduct));
 		}
 		return parsedProduct;

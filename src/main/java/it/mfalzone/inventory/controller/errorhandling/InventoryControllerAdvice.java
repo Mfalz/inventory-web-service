@@ -1,7 +1,8 @@
 package it.mfalzone.inventory.controller.errorhandling;
 
-import it.mfalzone.inventory.service.exception.BusinessException;
 import it.mfalzone.inventory.controller.errorhandling.model.ApiError;
+import it.mfalzone.inventory.service.exception.BusinessException;
+import it.mfalzone.inventory.service.exception.NotFoundBusinessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,13 @@ public class InventoryControllerAdvice extends ResponseEntityExceptionHandler {
 		var error = ApiError.of(HttpStatus.BAD_REQUEST, ex);
 
 		return buildApiResponse(HttpStatus.BAD_REQUEST, error);
+	}
+
+	@ExceptionHandler(value = {NotFoundBusinessException.class})
+	protected ResponseEntity<ApiError> handleNotFound(NotFoundBusinessException ex) {
+		var error = ApiError.of(HttpStatus.NOT_FOUND, ex.getMessage(), ex.getMessage());
+
+		return buildApiResponse(HttpStatus.NOT_FOUND, error);
 	}
 
 	@ExceptionHandler(value = {Exception.class})

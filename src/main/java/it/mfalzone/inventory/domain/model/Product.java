@@ -17,17 +17,17 @@ public class Product {
 	private final String location;
 	private final String category;
 
-	public boolean isValid() {
-		if (StringUtils.isBlank(description)) {
+	public static boolean isValid(Product p) {
+		if (StringUtils.isBlank(p.getDescription())) {
 			return false;
 		}
-		if (quantity <= 0) {
+		if (p.getQuantity() <= 0) {
 			return false;
 		}
-		if (weight == null) {
+		if (p.getWeight() == null) {
 			return false;
 		}
-		if (expiry.toLocalDate().isBefore(LocalDate.now())) {
+		if (p.getExpiry().toLocalDate().isBefore(LocalDate.now())) {
 			return false;
 		}
 		return true;
