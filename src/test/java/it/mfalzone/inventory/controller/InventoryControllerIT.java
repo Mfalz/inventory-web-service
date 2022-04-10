@@ -71,21 +71,26 @@ public class InventoryControllerIT extends ControllerIT {
 		downloadInventoryRequest().expectStatus().isNotFound();
 	}
 
+	@Test
+	void downloadInventory_anonymousClient_forbiddenIsReturned() {
+		webTestClient.get().uri(INVENTORY_ENDPOINT).exchange().expectStatus().isUnauthorized();
+	}
+
+	/* Request Builders */
+
 	private WebTestClient.ResponseSpec uploadFileRequest(String filename) {
 		var resource = loadFileInClasspath(filename);
 
-		return webTestClient.post()
-							.uri(INVENTORY_ENDPOINT)
-							.contentType(MediaType.MULTIPART_FORM_DATA)
-							.body(BodyInserters.fromMultipartData("file", resource))
-							.exchange();
+		return authWebTestClient.post()
+								.uri(INVENTORY_ENDPOINT)
+								.contentType(MediaType.MULTIPART_FORM_DATA)
+								.body(BodyInserters.fromMultipartData("file", resource))
+								.exchange();
 	}
 
 	private WebTestClient.ResponseSpec downloadInventoryRequest() {
-
-		return webTestClient.get()
-							.uri(INVENTORY_ENDPOINT)
-							.exchange();
+		return authWebTestClient.get()
+								.uri(INVENTORY_ENDPOINT)
+								.exchange();
 	}
-
 }
