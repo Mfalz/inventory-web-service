@@ -26,12 +26,12 @@ public class InventoryController {
 
 	@PostMapping
 	public void uploadInventory(@NonNull @RequestParam("file") MultipartFile file, @AuthenticationPrincipal IdentityProviderUser user) {
-		inventoryService.uploadInventory(file);
+		inventoryService.uploadInventory(file, user);
 	}
 
 	@GetMapping
-	public ResponseEntity<InventoryRest> downloadInventory() {
-		return ResponseEntity.ok(ProductRestMapping.map(inventoryService.getAllProducts()));
+	public ResponseEntity<InventoryRest> downloadInventory(@AuthenticationPrincipal IdentityProviderUser user) {
+		return ResponseEntity.ok(ProductRestMapping.map(inventoryService.getAllProducts(user)));
 	}
 
 }

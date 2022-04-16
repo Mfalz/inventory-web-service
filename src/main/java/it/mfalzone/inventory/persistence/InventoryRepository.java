@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface InventoryRepository extends JpaRepository<ProductEntity, Long> {
+    List<ProductEntity> findAllByUserEmail(String email);
 
-//	List<ProductEntity> find
-
+	void deleteAllByUserEmail(String email);
 }

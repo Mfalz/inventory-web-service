@@ -24,6 +24,8 @@ public class ProductEntity {
 
 	private Timestamp expiryDate;
 
+	private String userEmail;
+
 	@Embeddable
 	@Getter
 	public static class Weight {

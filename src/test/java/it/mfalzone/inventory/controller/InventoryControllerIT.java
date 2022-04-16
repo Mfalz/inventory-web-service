@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import static it.mfalzone.inventory.controller.configuration.DummyAuthenticationProvider.DUMMY_USER_EMAIL;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 public class InventoryControllerIT extends ControllerIT {
@@ -31,6 +32,8 @@ public class InventoryControllerIT extends ControllerIT {
 	void uploadExcelFile_productsAreImported() {
 		uploadFileRequest("input_excel/input_products.xlsx").expectStatus().isOk();
 		assertThat(inventoryRepository.findAll()).hasSize(16);
+		assertThat(inventoryRepository.findAllByUserEmail(DUMMY_USER_EMAIL)).hasSize(16);
+		assertThat(inventoryRepository.findAllByUserEmail("any")).hasSize(0);
 	}
 
 	@Test

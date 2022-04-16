@@ -1,5 +1,6 @@
 package it.mfalzone.inventory.service.mapper;
 
+import it.mfalzone.inventory.controller.security.authentication.identityprovider.IdentityProviderUser;
 import it.mfalzone.inventory.domain.model.Product;
 import it.mfalzone.inventory.domain.model.Weight;
 import it.mfalzone.inventory.domain.model.WeightMeasurement;
@@ -9,13 +10,13 @@ import java.sql.Timestamp;
 
 public interface ProductMapper {
 
-	static ProductEntity mapToEntity(Product p) {
+	static ProductEntity mapToEntity(Product p, IdentityProviderUser user) {
 		ProductEntity pe = new ProductEntity();
 		pe.setDescription(p.getDescription());
 		pe.setExpiryDate(Timestamp.valueOf(p.getExpiry()));
 		pe.setQuantity(p.getQuantity());
 		pe.setWeight(mapToEntityWeight(p.getWeight()));
-
+		pe.setUserEmail(user.getEmail());
 		return pe;
 	}
 

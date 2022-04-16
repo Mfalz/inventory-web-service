@@ -9,12 +9,14 @@ import org.springframework.security.core.AuthenticationException;
 
 public class DummyAuthenticationProvider implements AuthenticationProvider {
 
+	public final static String DUMMY_USER_EMAIL = "dummy@email.com";
+
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		DecodedJWT jwt = (DecodedJWT) authentication.getPrincipal();
 		IdentityProviderUser identityProviderUser = new IdentityProviderUser("DUMMY",
 																			 "id-123",
-																			 "dummy@email.com",
+																			 DUMMY_USER_EMAIL,
 																			 "firstname",
 																			 "lastname");
 		return new IdentityProviderAuthenticationToken(jwt, identityProviderUser);

@@ -5,6 +5,8 @@ import it.mfalzone.inventory.persistence.entity.ProductEntity;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import static it.mfalzone.inventory.controller.configuration.DummyAuthenticationProvider.DUMMY_USER_EMAIL;
+
 public class DomainUtils {
 
 	public final static LocalDateTime FUTURE_DATE = LocalDateTime.of(2100, 1, 1, 0, 0, 0, 0);
@@ -25,7 +27,7 @@ public class DomainUtils {
 		pe.setQuantity(2);
 		pe.setWeight(new ProductEntity.Weight(200, ProductEntity.Weight.WeightMeasurement.GRAMS));
 		pe.setExpiryDate(Timestamp.valueOf(FUTURE_DATE));
-
+		pe.setUserEmail(DUMMY_USER_EMAIL);
 		return pe;
 	}
 
