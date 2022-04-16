@@ -1,4 +1,4 @@
-package it.mfalzone.inventory.controller.configurations;
+package it.mfalzone.inventory.controller.security.configurations;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

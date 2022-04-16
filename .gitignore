@@ -5,6 +5,8 @@ target/
 !**/src/test/**/target/
 **/src/test/**/input_excel/~*.xlsx
 
+**/src/main/resources/firebase/*.json
+
 pom.xml.releaseBackup
 release.properties
 

@@ -1,6 +1,6 @@
 package it.mfalzone.inventory.controller.security.filters;
 
-import it.mfalzone.inventory.controller.configurations.AllowedClientsConfiguration;
+import it.mfalzone.inventory.controller.security.configurations.AllowedClientsConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 

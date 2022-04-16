@@ -2,9 +2,11 @@ package it.mfalzone.inventory.controller;
 
 import it.mfalzone.inventory.controller.mapping.ProductRestMapping;
 import it.mfalzone.inventory.controller.model.InventoryRest;
+import it.mfalzone.inventory.controller.security.authentication.identityprovider.IdentityProviderUser;
 import it.mfalzone.inventory.service.InventoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +25,7 @@ public class InventoryController {
 	}
 
 	@PostMapping
-	public void uploadInventory(@NonNull @RequestParam("file") MultipartFile file) {
+	public void uploadInventory(@NonNull @RequestParam("file") MultipartFile file, @AuthenticationPrincipal IdentityProviderUser user) {
 		inventoryService.uploadInventory(file);
 	}
 

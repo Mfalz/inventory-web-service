@@ -40,6 +40,9 @@ spring:
     serialization:
       write-dates-as-timestamps: false
 
+firebase:
+  service-account: firebase/admin-service-account.json
+  project-id: mfalzone-b1f40
 
 application:
   allowedClients:
