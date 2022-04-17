@@ -26,9 +26,12 @@ jobs:
         run: ./mvnw test
       - name: Run Integration Tests
         env:
-          FIREBASE_SERVICE_ACCOUNT: ${{secrets.FIREBASE_INTEGRATION_TEST_SERVICE_ACCOUNT}}
+          SERVICE_ACCOUNT_KEY: ${{secrets.FIREBASE_INTEGRATION_TEST_SERVICE_ACCOUNT}}
+          FIREBASE_SERVICEACCOUNT: /tmp/admin-service-account.json
         run: |
-          echo ${FIREBASE_SERVICE_ACCOUNT} > ./src/main/resources/firebase/admin-service-account.json
+          echo ${SERVICE_ACCOUNT_KEY} > /tmp/admin-service-account.json
+          echo $SERVICE_ACCOUNT_KEY
+          cat /tmp/admin-service-account.json
           ./mvnw verify
 
   release-snapshot:
