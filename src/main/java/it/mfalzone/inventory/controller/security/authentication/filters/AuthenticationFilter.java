@@ -37,7 +37,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		String issuer = decodedJwt.getIssuer();
 
 		if (issuer.startsWith("https://securetoken.google.com")) {
-			authenticationProvider = new FirebaseAuthenticationProvider(new FirebaseIdentityProviderAdapterImpl());
+			authenticationProvider = new FirebaseAuthenticationProvider();
 		} else if (authenticationProvider == null) {
 			throw new IllegalArgumentException("Unknown issuer " + issuer);
 		}
