@@ -5,10 +5,14 @@ import com.google.firebase.auth.FirebaseAuthException;
 import it.mfalzone.inventory.controller.security.authentication.identityprovider.IdentityProviderAdapter;
 import it.mfalzone.inventory.controller.security.authentication.identityprovider.IdentityProviderUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("!integration-tests")
 public class FirebaseIdentityProviderAdapterImpl implements IdentityProviderAdapter {
+
 	@Autowired
 	private FirebaseAuth firebaseAuth;
 
