@@ -25,13 +25,7 @@ jobs:
       - name: Run Unit Tests
         run: ./mvnw test
       - name: Run Integration Tests
-        env:
-          SERVICE_ACCOUNT_KEY: ${{secrets.FIREBASE_INTEGRATION_TEST_SERVICE_ACCOUNT}}
-          FIREBASE_SERVICEACCOUNT: /tmp/admin-service-account.json
         run: |
-          echo ${SERVICE_ACCOUNT_KEY} > /tmp/admin-service-account.json
-          echo $SERVICE_ACCOUNT_KEY
-          cat /tmp/admin-service-account.json
           ./mvnw verify
 
   release-snapshot:
