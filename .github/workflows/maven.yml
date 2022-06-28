@@ -58,7 +58,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: mfalz1/inventory-service
+          tags: mfalz1/inventory-service:${CI_COMMIT_REF_NAME }
 
   release-main:
     runs-on: ubuntu-latest
