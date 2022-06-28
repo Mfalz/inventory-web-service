@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM openjdk:17-alpine
+FROM --platform=$BUILDPLATFORM openjdk:17.0.2
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 
