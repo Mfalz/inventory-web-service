@@ -1,4 +1,6 @@
-FROM openjdk:17-alpine
+FROM --platform=$BUILDPLATFORM openjdk:17-alpine
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
 
 WORKDIR /usr/myapp
 
