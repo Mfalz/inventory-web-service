@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM openjdk:17.0.1
+FROM --platform=$TARGETPLATFORM eclipse-temurin
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
