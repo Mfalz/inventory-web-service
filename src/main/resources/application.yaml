@@ -42,10 +42,10 @@ spring:
 
 firebase:
   service-account: firebase/admin-service-account.json
-  project-id: mfalzone-b1f40
+  project-id: falzone-web
 
 application:
   allowedClients:
-    mfalzone-web:
+    postman:
       clientUsername: 123456
       clientPassword: password

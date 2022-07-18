@@ -17,7 +17,6 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 
 @Configuration
-@Profile("!integration-tests")
 class FirebaseConfiguration {
 
 	protected Logger LOG = LogManager.getLogger(FirebaseConfiguration.class);

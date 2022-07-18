@@ -22,8 +22,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 	private AuthenticationProvider authenticationProvider;
 
-	public AuthenticationFilter(AuthenticationProvider provider) {
+	private FirebaseIdentityProviderAdapterImpl firebaseIdentityProviderAdapter;
+
+	public AuthenticationFilter(AuthenticationProvider provider, FirebaseIdentityProviderAdapterImpl firebaseIdentityProviderAdapter) {
 		this.authenticationProvider = provider;
+		this.firebaseIdentityProviderAdapter = firebaseIdentityProviderAdapter;
 	}
 
 	@Override
@@ -37,7 +40,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		String issuer = decodedJwt.getIssuer();
 
 		if (issuer.startsWith("https://securetoken.google.com")) {
-			authenticationProvider = new FirebaseAuthenticationProvider();
+			authenticationProvider = new FirebaseAuthenticationProvider(firebaseIdentityProviderAdapter);
 		} else if (authenticationProvider == null) {
 			throw new IllegalArgumentException("Unknown issuer " + issuer);
 		}
@@ -45,6 +48,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		SecurityContextHolder.getContext().setAuthentication(authenticationProvider.authenticate(authentication));
 
 		filterChain.doFilter(request, response);
+	}
+
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		return request.getRequestURI().equals("/actuator/health");
 	}
 
 }
