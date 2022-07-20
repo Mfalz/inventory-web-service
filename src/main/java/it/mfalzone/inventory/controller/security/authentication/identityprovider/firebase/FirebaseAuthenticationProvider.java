@@ -3,18 +3,21 @@ package it.mfalzone.inventory.controller.security.authentication.identityprovide
 import com.auth0.jwt.interfaces.DecodedJWT;
 import it.mfalzone.inventory.controller.security.IdentityProviderAuthenticationToken;
 import it.mfalzone.inventory.controller.security.authentication.identityprovider.IdentityProviderUser;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
+@Profile("!integration-tests")
 @Component
 public class FirebaseAuthenticationProvider implements AuthenticationProvider {
 
 	private final FirebaseIdentityProviderAdapterImpl firebaseIdentityProviderAdapter;
 
-	public FirebaseAuthenticationProvider(FirebaseIdentityProviderAdapterImpl firebaseIdentityProviderAdapter) {
-		this.firebaseIdentityProviderAdapter = firebaseIdentityProviderAdapter;
+	public FirebaseAuthenticationProvider(FirebaseConfiguration configuration) {
+		firebaseIdentityProviderAdapter = new FirebaseIdentityProviderAdapterImpl(configuration.getFirebaseInstance());
 	}
 
 	@Override
