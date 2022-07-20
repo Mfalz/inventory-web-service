@@ -4,7 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import it.mfalzone.inventory.controller.security.IdentityProviderAuthenticationToken;
 import it.mfalzone.inventory.controller.security.authentication.identityprovider.firebase.FirebaseAuthenticationProvider;
-import it.mfalzone.inventory.controller.security.authentication.identityprovider.firebase.FirebaseIdentityProviderAdapterImpl;
+import it.mfalzone.inventory.controller.security.authentication.identityprovider.firebase.FirebaseConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,11 +21,8 @@ import java.io.IOException;
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 
+	@Autowired
 	private AuthenticationProvider authenticationProvider;
-
-	public AuthenticationFilter(AuthenticationProvider provider) {
-		this.authenticationProvider = provider;
-	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request,
@@ -34,17 +32,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		DecodedJWT decodedJwt = JWT.decode(jwtToken);
 		IdentityProviderAuthenticationToken authentication = new IdentityProviderAuthenticationToken(decodedJwt);
 
-		String issuer = decodedJwt.getIssuer();
-
-		if (issuer.startsWith("https://securetoken.google.com")) {
-			authenticationProvider = new FirebaseAuthenticationProvider();
-		} else if (authenticationProvider == null) {
-			throw new IllegalArgumentException("Unknown issuer " + issuer);
-		}
-
 		SecurityContextHolder.getContext().setAuthentication(authenticationProvider.authenticate(authentication));
 
 		filterChain.doFilter(request, response);
+	}
+
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		return request.getRequestURI().equals("/actuator/health");
 	}
 
 }
